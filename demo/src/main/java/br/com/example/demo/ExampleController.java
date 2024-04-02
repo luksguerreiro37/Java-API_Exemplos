@@ -21,24 +21,26 @@ public class ExampleController {
     }
 
     @GetMapping("/{exampleId}")
-    public Optional<ExampleModel> retrieve(@PathVariable Long exampleID){
-        return examples.stream().filter(e -> e.getId().equals(exampleID)).findFirst();
+    public Optional<ExampleModel> retrieve(@PathVariable Long exampleId){
+        return examples.stream().filter(e -> e.getId().equals(exampleId)).findFirst();
     }
 
     @PutMapping("/{exampleId}")
     public Optional<ExampleModel> update(@PathVariable Long exampleId, @RequestBody ExampleModel payload){
-        examples.stream().map(e -> {
+        var newExamples = examples.stream().map(e -> {
             if (e.getId().equals(exampleId)) {
                 payload.setId(e.getId());
                 return payload;
             }
             return e;
         });
+        examples = new ArrayList<ExampleModel>(newExamples.toList());
         return examples.stream().filter(e -> e.getId().equals(exampleId)).findFirst();
     }
 
     @DeleteMapping("/{exampleId}")
     public void delete(@PathVariable Long exampleId){
-        examples.stream().filter(e -> !e.getId().equals(exampleId));
+        var newExamples = examples.stream().filter(e -> !e.getId().equals(exampleId));
+        examples = new ArrayList<ExampleModel>(newExamples.toList());
     }
 }
